@@ -1,4 +1,4 @@
-# Especificação técnica - GKLI Colaborador
+﻿# Especificação técnica - GKLI Colaborador
 
 ## Stack
 

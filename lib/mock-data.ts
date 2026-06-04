@@ -1,4 +1,4 @@
-import type { ColaboradorFlex, Pagamento, Recibo } from "./types";
+﻿import type { ColaboradorFlex, Pagamento, Recibo } from "./types";
 
 export const colaborador: ColaboradorFlex = {
   idFlex: "flex_colab_10293",

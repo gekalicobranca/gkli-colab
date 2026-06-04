@@ -1,4 +1,4 @@
-# Especificação funcional - GKLI Colaborador
+﻿# Especificação funcional - GKLI Colaborador
 
 ## Objetivo
 

@@ -1,4 +1,4 @@
-# Recibo de pagamento mensal
+﻿# Recibo de pagamento mensal
 
 Arquivo analisado: `Recibo de Pagamento_Empregados.pdf`
 

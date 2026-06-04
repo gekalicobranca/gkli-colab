@@ -1,4 +1,4 @@
-export type ColaboradorFlex = {
+﻿export type ColaboradorFlex = {
   idFlex: string;
   idCore?: string;
   nome: string;

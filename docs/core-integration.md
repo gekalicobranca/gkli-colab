@@ -1,4 +1,4 @@
-# Integração GKLI Core -> Colab
+﻿# Integração GKLI Core -> Colab
 
 O Colab agora consulta o GKLI Core como fonte de identidade e permissão de entrada.
 

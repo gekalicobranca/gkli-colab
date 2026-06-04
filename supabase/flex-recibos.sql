@@ -1,4 +1,4 @@
-create table if not exists gkli_flex.recibos_pagamento (
+﻿create table if not exists gkli_flex.recibos_pagamento (
   id uuid primary key default gen_random_uuid(),
   competencia_id uuid not null references gkli_flex.competencias(id),
   colaborador_id uuid not null references gkli_flex.colaboradores(id),

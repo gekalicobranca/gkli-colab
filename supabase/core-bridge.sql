@@ -1,4 +1,4 @@
--- Bridge inicial entre GKLI Colab e GKLI Core.
+﻿-- Bridge inicial entre GKLI Colab e GKLI Core.
 -- Mantém o acesso atual por Supabase Auth e adiciona referência opcional ao usuário central.
 
 alter table colaborador_area.colaborador_vinculo

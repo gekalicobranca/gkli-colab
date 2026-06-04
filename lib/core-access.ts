@@ -1,4 +1,4 @@
-import "server-only";
+﻿import "server-only";
 
 import { coreBaseUrl } from "@/lib/env";
 
@@ -50,7 +50,7 @@ const localCoreAccessSnapshot: CoreColabAccessPayload = {
       status: "Ativo",
       tipoAcesso: "Administrador",
       apps: ["COB", "Flex", "Core", "Colab"],
-      carteiras: ["Administradora Modelo", "Condominios RJ"],
+      carteiras: ["Administradora Modelo", "Condomínios RJ"],
       canOpenColab: true
     },
     {
@@ -58,9 +58,9 @@ const localCoreAccessSnapshot: CoreColabAccessPayload = {
       nome: "Rafael Nunes",
       email: "rafael.nunes@gkli.com.br",
       status: "Ativo",
-      tipoAcesso: "Operacao",
+      tipoAcesso: "Operação",
       apps: ["COB", "Core", "Colab"],
-      carteiras: ["Condominios SP"],
+      carteiras: ["Condomínios SP"],
       canOpenColab: true
     }
   ],
@@ -68,15 +68,15 @@ const localCoreAccessSnapshot: CoreColabAccessPayload = {
     {
       id: "admin",
       nome: "Administrador",
-      descricao: "Pode gerenciar usuarios, apps, carteiras e permissoes globais.",
+      descricao: "Pode gerenciar usuários, apps, carteiras e permissões globais.",
       nivel: "Global",
       usuarios: 1,
       permissions: ["gkli_colab.admin"]
     },
     {
       id: "operacao",
-      nome: "Operacao",
-      descricao: "Acesso operacional aos apps habilitados e as carteiras vinculadas.",
+      nome: "Operação",
+      descricao: "Acesso operacional aos apps habilitados e às carteiras vinculadas.",
       nivel: "Carteira",
       usuarios: 1,
       permissions: ["gkli_colab.dashboard.read", "gkli_colab.recibos.read"]

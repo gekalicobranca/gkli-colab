@@ -1,4 +1,4 @@
-# GKLI Colaborador
+﻿# GKLI Colaborador
 
 Área do colaborador para acompanhar pagamentos sincronizados do Flex e recibos mensais disponibilizados pela folha.
 
@@ -48,7 +48,7 @@ npm run lint
 npm run build
 ```
 
-## Integracao com GKLI Core
+## Integração com GKLI Core
 
 O Colab consulta `GET /api/gkli-core/colab-access` usando `GKLI_CORE_BASE_URL`.
 O Core autoriza a entrada no app `gkli_colab`; pagamentos e recibos continuam
