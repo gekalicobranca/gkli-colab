@@ -3,6 +3,7 @@ export const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHAB
 export const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 export const flexSchema = process.env.GKLI_FLEX_SCHEMA ?? "gkli_flex";
 export const defaultFlexColaboradorId = process.env.GKLI_DEFAULT_FLEX_COLABORADOR_ID;
+export const coreBaseUrl = process.env.GKLI_CORE_BASE_URL ?? "";
 
 export function requireEnv(value: string | undefined, name: string) {
   if (!value) {

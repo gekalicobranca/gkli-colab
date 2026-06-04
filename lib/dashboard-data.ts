@@ -2,6 +2,7 @@ import "server-only";
 
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { flexSchema } from "@/lib/env";
+import { findCoreColabUserByEmail } from "@/lib/core-access";
 import { colaborador as mockColaborador, pagamentos as mockPagamentos, recibos as mockRecibos } from "@/lib/mock-data";
 import type { ColaboradorFlex, Pagamento, Recibo } from "@/lib/types";
 
@@ -9,8 +10,9 @@ type DashboardData = {
   colaborador: ColaboradorFlex;
   pagamentos: Pagamento[];
   recibos: Recibo[];
-  source: "supabase" | "mock";
+  source: "core" | "supabase" | "mock";
   hasColaborador: boolean;
+  hasFlexLink: boolean;
 };
 
 type DbRecord = Record<string, unknown>;
@@ -124,6 +126,29 @@ function mapColaborador(
   };
 }
 
+function mapCoreColaborador(coreUser: NonNullable<Awaited<ReturnType<typeof findCoreColabUserByEmail>>>): ColaboradorFlex {
+  const nome = coreUser.nome || "Colaborador GKLI";
+  const iniciais = nome
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+
+  return {
+    idCore: coreUser.id,
+    idFlex: coreUser.id,
+    nome,
+    iniciais: iniciais || "GK",
+    matriculaFlex: coreUser.email,
+    cargo: coreUser.tipoAcesso,
+    unidade: coreUser.app.nome,
+    apps: coreUser.apps,
+    carteiras: coreUser.carteiras,
+    origem: "core"
+  };
+}
+
 async function loadFlexColaboradorByAuthUser(authUserId: string) {
   const supabase = createAdminSupabaseClient();
   const { data, error } = await supabase
@@ -198,16 +223,32 @@ async function loadRecibosFromFlex(flexColaboradorId: string) {
   return data.map((row) => mapRecibo(row as DbRecord, competencias.get(String(row.competencia_id))));
 }
 
-export async function getColaboradorDashboard(authUserId: string): Promise<DashboardData> {
+export async function getColaboradorDashboard(authUserId: string, email?: string | null): Promise<DashboardData> {
   try {
-    const flexColaborador = await loadFlexColaboradorByAuthUser(authUserId);
-    if (!flexColaborador) {
+    const [coreUser, flexColaborador] = await Promise.all([
+      findCoreColabUserByEmail(email),
+      loadFlexColaboradorByAuthUser(authUserId)
+    ]);
+
+    if (!coreUser && !flexColaborador) {
       return {
         colaborador: mockColaborador,
         pagamentos: [],
         recibos: [],
         source: "mock",
-        hasColaborador: false
+        hasColaborador: false,
+        hasFlexLink: false
+      };
+    }
+
+    if (!flexColaborador) {
+      return {
+        colaborador: coreUser ? mapCoreColaborador(coreUser) : mockColaborador,
+        pagamentos: [],
+        recibos: [],
+        source: coreUser ? "core" : "mock",
+        hasColaborador: Boolean(coreUser),
+        hasFlexLink: false
       };
     }
 
@@ -220,11 +261,24 @@ export async function getColaboradorDashboard(authUserId: string): Promise<Dashb
     ]);
 
     return {
-      colaborador: mapColaborador(flexColaborador, flexColaboradorId, time, perfil),
+      colaborador: coreUser
+        ? {
+            ...mapColaborador(flexColaborador, flexColaboradorId, time, perfil),
+            idCore: coreUser.id,
+            nome: coreUser.nome,
+            matriculaFlex: coreUser.email,
+            cargo: coreUser.tipoAcesso,
+            unidade: coreUser.app.nome,
+            apps: coreUser.apps,
+            carteiras: coreUser.carteiras,
+            origem: "core"
+          }
+        : { ...mapColaborador(flexColaborador, flexColaboradorId, time, perfil), origem: "flex" },
       pagamentos: pagamentos ?? [],
       recibos,
-      source: "supabase",
-      hasColaborador: true
+      source: coreUser ? "core" : "supabase",
+      hasColaborador: true,
+      hasFlexLink: true
     };
   } catch {
     return {
@@ -232,7 +286,8 @@ export async function getColaboradorDashboard(authUserId: string): Promise<Dashb
       pagamentos: mockPagamentos,
       recibos: mockRecibos,
       source: "mock",
-      hasColaborador: false
+      hasColaborador: false,
+      hasFlexLink: false
     };
   }
 }

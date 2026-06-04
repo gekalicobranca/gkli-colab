@@ -34,5 +34,5 @@ create index if not exists recibos_pagamento_importacao_idx
 
 alter table gkli_flex.recibos_pagamento enable row level security;
 
--- A area do colaborador acessa recibos pela rota protegida do app.
--- O processamento/importacao do PDF mensal continua pertencendo ao Flex.
+-- A área do colaborador acessa recibos pela rota protegida do app.
+-- O processamento/importação do PDF mensal continua pertencendo ao Flex.

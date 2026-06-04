@@ -35,7 +35,8 @@ export default async function Home() {
     redirect("/login");
   }
 
-  const { colaborador, pagamentos, recibos, source, hasColaborador } = await getColaboradorDashboard(user.id);
+  const { colaborador, pagamentos, recibos, source, hasColaborador, hasFlexLink } =
+    await getColaboradorDashboard(user.id, user.email);
 
   if (!hasColaborador) {
     return (
@@ -43,9 +44,7 @@ export default async function Home() {
         <section className="emptyState">
           <p className="eyebrow">Acesso pendente</p>
           <h1>Cadastro não encontrado</h1>
-          <p>
-            Seu usuário entrou corretamente, mas ainda não existe um colaborador ativo no Flex vinculado a este acesso.
-          </p>
+          <p>Seu usuário entrou corretamente, mas ainda não existe acesso ativo no GKLI Core para o Colab.</p>
           <form action={signOut}>
             <button className="primaryButton" type="submit">
               Sair
@@ -69,10 +68,16 @@ export default async function Home() {
           <p className="eyebrow">Área do colaborador</p>
           <h1>{colaborador.nome}</h1>
           <p className="subtitle">
-            Pagamentos, recibos e comprovantes mensais sincronizados com o cadastro do Flex.
+            Pagamentos, recibos e comprovantes mensais com identidade autorizada pelo GKLI Core.
           </p>
-          <span className={source === "supabase" ? "dataSource live" : "dataSource"}>
-            {source === "supabase" ? "Dados conectados ao Supabase" : "Exibindo dados de demonstração"}
+          <span className={source === "mock" ? "dataSource" : "dataSource live"}>
+            {source === "core"
+              ? hasFlexLink
+                ? "Identidade Core + dados Flex"
+                : "Identidade Core aguardando vínculo Flex"
+              : source === "supabase"
+                ? "Dados conectados ao Supabase"
+                : "Exibindo dados de demonstração"}
           </span>
         </div>
         <div className="profileCard" aria-label="Dados do colaborador">
@@ -160,7 +165,11 @@ export default async function Home() {
                     <span className="monthBadge">Flex</span>
                     <div>
                       <strong>Nenhum pagamento disponível</strong>
-                      <p>Quando o Flex vincular pagamentos a este colaborador, eles aparecerão aqui.</p>
+                      <p>
+                        {hasFlexLink
+                          ? "Quando o Flex gerar pagamentos para este colaborador, eles aparecerão aqui."
+                          : "O Core autorizou o acesso, mas ainda falta vincular este usuário ao colaborador no Flex."}
+                      </p>
                     </div>
                   </div>
                 </article>
@@ -185,9 +194,7 @@ export default async function Home() {
               </span>
               <div>
                 <strong>{ultimoRecibo ? ultimoRecibo.arquivo : "Recibos ficam no Flex"}</strong>
-                <p>
-                  A importação mensal acontece no Flex. Esta área mostra apenas o recibo já vinculado ao colaborador.
-                </p>
+                <p>A importação mensal acontece no Flex. Esta área mostra apenas o recibo já vinculado ao colaborador.</p>
               </div>
               {ultimoRecibo?.downloadUrl ? (
                 <a className="secondaryButton" href={ultimoRecibo.downloadUrl}>

@@ -1,10 +1,14 @@
 export type ColaboradorFlex = {
   idFlex: string;
+  idCore?: string;
   nome: string;
   iniciais: string;
   matriculaFlex: string;
   cargo: string;
   unidade: string;
+  apps?: string[];
+  carteiras?: string[];
+  origem?: "core" | "flex" | "mock";
 };
 
 export type Pagamento = {
